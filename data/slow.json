@@ -8,43 +8,43 @@
       "as_of": "2024-12-31",
       "source": "Savills",
       "url": "https://www.savills.us/insight-and-opinion/savills-news/381209/world-s-real-estate-worth-393-3-trillion-and-is-the-world-s-largest-store-of-wealth",
-      "note": "Homes, commercial property and farmland. Partly financed by debt, so it overlaps the debt row."
+      "note": "Homes, commercial property and farmland. Partly financed by debt, so it overlaps the debt row. Savills publishes yearly, around September."
     },
     {
       "id": "debt",
       "label": "Debt (all borrowing)",
-      "value_tn": 365,
+      "value_tn": 365.5,
       "as_of": "2026-06-30",
-      "source": "IIF Global Debt Monitor",
-      "url": "https://stockanalysis.com/news/global-debt-hits-365-trillion/",
-      "note": "Government, company, household and bank debt, including loans. Traded bonds are a smaller part of it."
+      "source": "IIF Global Debt Monitor (23 Sep 2026); exact total as reported by The Star",
+      "url": "https://www.iif.com/Products/Global-Debt-Monitor",
+      "note": "Government, company, household and bank debt, including loans: 311% of world GDP. Traded bonds are a smaller part of it. IIF publishes about every 3 months."
     },
     {
-      "id": "stocks_us",
-      "label": "US stocks (estimate)",
-      "value_tn": 64.1,
+      "id": "stocks_na",
+      "label": "North American stocks (mostly US)",
+      "value_tn": 75.9,
       "as_of": "2026-08-31",
-      "source": "FTSE Global All Cap: $103.6T total (31 Dec 2025) x US weight 61.91% (31 Aug 2026)",
-      "url": "https://www.icaew.com/insights/viewpoints-on-the-news/2026/jan-2026/chart-of-the-week-global-stock-markets",
-      "note": "Mixed dates, so this is a rough estimate. Counts only freely traded shares."
+      "source": "Ocorian Global Asset Monitor #5 (19 Oct 2026)",
+      "url": "https://www.ocorian.com/global-asset-monitor-5-equity-markets",
+      "note": "Total value of all listed shares in the US and Canada. Ocorian gives no separate US figure."
     },
     {
       "id": "stocks_rest",
-      "label": "Other stocks, developed + emerging (estimate)",
-      "value_tn": 39.5,
+      "label": "Other listed stocks, rest of world",
+      "value_tn": 80.8,
       "as_of": "2026-08-31",
-      "source": "FTSE Global All Cap: $103.6T total minus the US estimate",
-      "url": "https://www.icaew.com/insights/viewpoints-on-the-news/2026/jan-2026/chart-of-the-week-global-stock-markets",
-      "note": "Mixed dates, so this is a rough estimate. Emerging markets are inside this number."
+      "source": "Ocorian Global Asset Monitor #5: $156.7T world total minus $75.9T North America",
+      "url": "https://www.ocorian.com/global-asset-monitor-5-equity-markets",
+      "note": "Europe, Japan, the rest of Asia-Pacific and emerging markets."
     },
     {
       "id": "private",
       "label": "Private assets in funds",
-      "value_tn": 14.9,
-      "as_of": "2025-12-31",
-      "source": "Ocorian",
-      "url": "https://www.ocorian.com/knowledge-hub/insights/global-value-private-assets-held-funds-rises-154-another-all-time-high-149",
-      "note": "Private equity, private credit, infrastructure and similar funds."
+      "value_tn": 14.75,
+      "as_of": "2026-09-30",
+      "source": "Ocorian Global Asset Monitor #5 (19 Oct 2026): sum of four parts",
+      "url": "https://www.ocorian.com/global-asset-monitor-5-global-assets-overview",
+      "note": "Private equity $10.46T + private real estate $1.51T + infrastructure $1.40T + private credit $1.38T. Lower than Ocorian's earlier $14.9T (end 2025) because Ocorian revised its model, not because values fell."
     }
   ],
   "gold_above_ground_tonnes": {
