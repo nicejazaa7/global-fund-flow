@@ -61,9 +61,9 @@
       "value_local_tn": 359.06,
       "currency": "CNY",
       "as_of": "2026-10-31",
-      "source": "PBOC (reported by People's Daily)",
-      "url": "https://en.people.cn/n3/2026/1114/c90000-20519006.html",
-      "note": "Update monthly from the PBOC financial statistics report."
+      "source": "PBOC, Financial Statistics Report (October 2026)",
+      "url": "https://www.pbc.gov.cn/en/3688247/3688978/3709137/2026111713594664567/index.html",
+      "note": "Update monthly. New reports appear mid-month on the PBOC list page: https://www.pbc.gov.cn/en/3688247/3688978/3709137/index.html"
     },
     {
       "id": "JP",

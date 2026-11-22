@@ -1,5 +1,5 @@
 {
- "generated_utc": "2026-11-22T13:18:08+00:00",
+ "generated_utc": "2026-11-22T13:20:51+00:00",
  "errors": [],
  "crypto": {
   "total_mcap_usd": 2071828143536.5964,
@@ -7,9 +7,9 @@
   "source": "CoinGecko"
  },
  "gold": {
-  "price_usd_oz": 3548.13,
-  "value_usd": 25575621397290.96,
-  "as_of": "2026-11-22T13:18:09.394670+00:00",
+  "price_usd_oz": 3548.71,
+  "value_usd": 25579802151775.84,
+  "as_of": "2026-11-22T13:20:52.262674+00:00",
   "source": "PAX Gold token price on CoinGecko (tracks 1 oz of gold)"
  },
  "fx": {
@@ -41,8 +41,8 @@
    "label": "China M2",
    "usd_tn": 53.76995421594811,
    "as_of": "2026-10-31",
-   "source": "PBOC (reported by People's Daily), entered by hand",
-   "url": "https://en.people.cn/n3/2026/1114/c90000-20519006.html"
+   "source": "PBOC, Financial Statistics Report (October 2026), entered by hand",
+   "url": "https://www.pbc.gov.cn/en/3688247/3688978/3709137/2026111713594664567/index.html"
   },
   {
    "id": "JP",
