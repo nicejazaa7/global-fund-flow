@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Global Fund Flow</title>
+<style>
+:root {
+  color-scheme: light;
+  --page: #f9f9f7; --surface: #fcfcfb;
+  --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --ring: rgba(11,11,11,0.10);
+  --s1: #2a78d6; --s2: #eb6834;          /* categorical: net flow, price effect */
+  --pos: #2a78d6; --neg: #e34948;        /* diverging poles: inflow, outflow */
+  --mag: #2a78d6;                        /* single-series magnitude */
+  --warn-bg: #fff4dc; --warn-ink: #6b4a00;
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19;
+    --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10);
+    --s1: #3987e5; --s2: #d95926; --pos: #3987e5; --neg: #e66767; --mag: #3987e5;
+    --warn-bg: #3a2c08; --warn-ink: #f5d48a;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d; --surface: #1a1a19;
+  --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --ring: rgba(255,255,255,0.10);
+  --s1: #3987e5; --s2: #d95926; --pos: #3987e5; --neg: #e66767; --mag: #3987e5;
+  --warn-bg: #3a2c08; --warn-ink: #f5d48a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink);
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { font-size: 28px; margin: 0 0 4px; }
+h2 { font-size: 19px; margin: 0 0 4px; }
+p { margin: 0 0 8px; }
+.sub, .note { color: var(--ink-2); }
+.note { font-size: 13px; }
+.muted { color: var(--muted); }
+section.card { background: var(--surface); border: 1px solid var(--ring); border-radius: 12px;
+  padding: 20px; margin-top: 20px; }
+.warn { background: var(--warn-bg); color: var(--warn-ink); border-radius: 8px; padding: 8px 12px;
+  font-size: 13px; margin-top: 12px; }
+.warn:empty { display: none; }
+
+/* horizontal magnitude bars */
+.hbars { margin-top: 14px; display: grid; gap: 6px; }
+.hrow { display: grid; grid-template-columns: minmax(120px, 230px) 1fr; gap: 12px; align-items: center;
+  padding: 3px 0; border-radius: 6px; }
+.hrow:hover { background: var(--page); }
+.hlabel { font-size: 14px; }
+.hlabel .meta { display: block; font-size: 12px; color: var(--muted); }
+.htrack { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.hbar { height: 16px; background: var(--mag); border-radius: 0 4px 4px 0; flex: none; min-width: 2px; }
+.hval { font-size: 13px; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.chip { display: inline-block; font-size: 11px; line-height: 16px; padding: 0 6px; border-radius: 8px;
+  border: 1px solid var(--axis); color: var(--ink-2); margin-left: 6px; vertical-align: 1px; }
+
+/* controls */
+.controls { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 4px; align-items: center; }
+.controls .lbl { font-size: 13px; color: var(--ink-2); margin-right: 4px; }
+button.seg { font: inherit; font-size: 13px; padding: 4px 12px; border-radius: 16px; cursor: pointer;
+  border: 1px solid var(--axis); background: transparent; color: var(--ink); }
+button.seg[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+
+/* legend */
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--ink-2); margin: 8px 0; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+/* diverging grouped bars */
+.drow { display: grid; grid-template-columns: minmax(120px, 200px) 1fr minmax(150px, 190px); gap: 12px;
+  align-items: center; padding: 6px 0; border-top: 1px solid var(--grid); }
+.drow:first-child { border-top: 0; }
+.dtrack { position: relative; height: 26px; }
+.dzero { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--axis); }
+.dbar { position: absolute; height: 11px; }
+.dbar.f { top: 1px; background: var(--s1); }
+.dbar.p { top: 14px; background: var(--s2); }
+.dbar.up { border-radius: 0 4px 4px 0; }
+.dbar.down { border-radius: 4px 0 0 4px; }
+.dvals { font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; line-height: 1.45; }
+.dvals b { color: var(--ink); font-weight: 600; }
+.empty { font-size: 13px; color: var(--muted); }
+
+/* column chart */
+.cols svg { width: 100%; height: 220px; display: block; }
+.cols text { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+
+/* table view */
+details { margin-top: 12px; font-size: 13px; }
+summary { cursor: pointer; color: var(--ink-2); }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; margin-top: 8px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+th { color: var(--ink-2); font-weight: 600; }
+td.num, th.num { text-align: right; white-space: nowrap; }
+a { color: inherit; }
+
+#tip { position: fixed; pointer-events: none; z-index: 10; max-width: 280px; display: none;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--ring); border-radius: 8px;
+  padding: 8px 10px; font-size: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+#tip b { font-size: 13px; }
+
+@media (max-width: 640px) {
+  .hrow { grid-template-columns: 1fr; gap: 2px; }
+  .drow { grid-template-columns: 1fr; gap: 4px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Global Fund Flow</h1>
+    <p class="sub">Where the world's value sits, and how much of each move is real new money versus a change in price.</p>
+    <p class="note" id="updated">Loading data…</p>
+    <div class="warn" id="errors"></div>
+  </header>
+
+  <section class="card" id="stores">
+    <h2>Where value sits</h2>
+    <p class="note">The rows overlap, so they do not add up. A mortgage is counted in both real estate and debt. Rows marked "live" refresh in your browser every minute. The others are entered by hand from yearly or quarterly reports.</p>
+    <div class="hbars" id="storeBars"></div>
+    <details><summary>Show as table, with sources</summary><div class="tablewrap"><table id="storeTable"></table></div></details>
+  </section>
+
+  <section class="card" id="flows">
+    <h2>Price change versus real money flow</h2>
+    <p class="note">One fund (ETF) stands in for each asset class. Real flow is money that actually entered or left the fund through new or redeemed shares. Price effect is the rest of the change in the fund's value. ETFs are only a small slice of each market.</p>
+    <div class="controls" id="windowCtl"><span class="lbl">Period</span></div>
+    <div class="legend"><span><i style="background:var(--s1)"></i>Real flow (new money in or out)</span><span><i style="background:var(--s2)"></i>Price effect</span></div>
+    <div id="flowRows"></div>
+    <p class="note" id="flowSummary" style="margin-top:10px"></p>
+    <details><summary>Show as table</summary><div class="tablewrap"><table id="flowTable"></table></div></details>
+  </section>
+
+  <section class="card" id="daily">
+    <h2>Daily real flow, last 60 trading days</h2>
+    <div class="controls" id="etfCtl"><span class="lbl">Fund</span></div>
+    <div class="legend"><span><i style="background:var(--pos)"></i>Money in</span><span><i style="background:var(--neg)"></i>Money out</span></div>
+    <div class="cols" id="dailyChart"></div>
+    <details><summary>Show as table</summary><div class="tablewrap"><table id="dailyTable"></table></div></details>
+  </section>
+
+  <section class="card" id="money">
+    <h2>Money supply (M2), four largest economies</h2>
+    <p class="note">This is background, not a flow. No official global M2 exists. Each country defines M2 a little differently, and converting to dollars means exchange-rate moves change these bars even when no money is created.</p>
+    <div class="hbars" id="moneyBars"></div>
+    <details><summary>Show as table, with sources</summary><div class="tablewrap"><table id="moneyTable"></table></div></details>
+  </section>
+
+  <section class="card">
+    <h2>How to read this</h2>
+    <p class="note">When someone buys a stock, their cash goes to the seller, so the cash stays in the market. Most changes in market value come from price, not from money moving between asset classes. This page separates the two for the funds it tracks.</p>
+    <p class="note">Real flow for one day = shares created or redeemed that day × that day's value per share (NAV). Price effect = shares held × change in NAV. Fund companies report shares outstanding one day late, so the newest day has no flow figure yet. Dividend payouts show up as a small negative price effect. Longer periods are more reliable than single days.</p>
+    <p class="note">Check: this method gives a SPY outflow of $6.98B for the week ending Nov 6, 2026. A published figure from TD Securities for that week was $7.0B.</p>
+    <p class="note">Data sources: CoinGecko (crypto, gold token price), ECB (exchange rates, Eurozone M2), FRED (US M2), State Street and iShares (fund data), plus the hand-entered reports listed in the tables. Nothing here is investment advice.</p>
+  </section>
+</main>
+<div id="tip"></div>
+
+<script>
+const TROY_OZ_PER_TONNE = 32150.7466;
+const WINDOWS = [[1, "1 day"], [5, "5 days"], [20, "20 days"], [60, "60 days"]];
+const state = { slow: null, live: null, win: 20, etf: "SPY" };
+
+const $ = (id) => document.getElementById(id);
+function el(tag, attrs = {}, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "style") n.style.cssText = v; else if (k === "text") n.textContent = v; else n.setAttribute(k, v);
+  }
+  kids.forEach((k) => n.append(k));
+  return n;
+}
+function fmtUSD(v, signed = false) {
+  const a = Math.abs(v), s = v < 0 ? "−" : signed && v > 0 ? "+" : "";
+  if (a >= 1e12) return `${s}$${(a / 1e12).toFixed(a >= 1e14 ? 0 : 1)}T`;
+  if (a >= 1e9) return `${s}$${(a / 1e9).toFixed(1)}B`;
+  if (a >= 1e6) return `${s}$${(a / 1e6).toFixed(0)}M`;
+  return `${s}$${a.toFixed(0)}`;
+}
+function fmtDate(iso) {
+  if (!iso) return "";
+  if (/^\d{4}-\d{2}$/.test(iso)) iso += "-01";
+  const d = new Date(iso.length === 10 ? iso + "T00:00:00Z" : iso);
+  const opts = { year: "numeric", month: "short", timeZone: "UTC" };
+  if (iso.length > 10 || !/-01$/.test(iso) || /T/.test(iso)) opts.day = "numeric";
+  return d.toLocaleDateString("en-US", opts);
+}
+
+/* tooltip */
+const tip = $("tip");
+function showTip(e, html) {
+  tip.innerHTML = html; tip.style.display = "block";
+  const r = tip.getBoundingClientRect();
+  let x = e.clientX + 14, y = e.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = e.clientY - r.height - 14;
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+const hideTip = () => (tip.style.display = "none");
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function bindTip(node, fn) {
+  node.addEventListener("mousemove", (e) => showTip(e, fn()));
+  node.addEventListener("mouseleave", hideTip);
+}
+
+/* ---------- section 1: where value sits ---------- */
+function storeRows() {
+  const { slow, live } = state;
+  const rows = slow.stores.map((s) => ({ label: s.label, value: s.value_tn * 1e12, as_of: s.as_of,
+    source: s.source, url: s.url, note: s.note, live: false }));
+  if (live.gold) rows.push({ label: "Gold", value: live.gold.value_usd, as_of: live.gold.as_of, live: true,
+    source: `${slow.gold_above_ground_tonnes.value.toLocaleString()} tonnes (World Gold Council) × $${Math.round(live.gold.price_usd_oz).toLocaleString()}/oz`,
+    url: slow.gold_above_ground_tonnes.url, note: "Price from the PAX Gold token, which tracks one ounce of gold." });
+  if (live.crypto) rows.push({ label: "Crypto (all coins)", value: live.crypto.total_mcap_usd, as_of: live.crypto.as_of,
+    live: true, source: "CoinGecko", url: "https://www.coingecko.com/", note: "Total market value of all tracked coins." });
+  const m = live.money || [];
+  if (m.length) rows.push({ label: "Money (M2), US + Eurozone + China + Japan", value: m.reduce((a, x) => a + x.usd_tn, 0) * 1e12,
+    as_of: m.map((x) => x.as_of).sort()[0], as_of_text: `${fmtDate(m.map((x) => x.as_of).sort()[0])} to ${fmtDate(m.map((x) => x.as_of).sort().at(-1))}`,
+    live: false, source: "FRED, ECB, PBOC, Bank of Japan",
+    url: "#money", note: "Sum of the four bars in the money section. Bank deposits are also lent out, so this overlaps debt." });
+  return rows.sort((a, b) => b.value - a.value);
+}
+function renderStores() {
+  const rows = storeRows(), max = rows[0].value, box = $("storeBars");
+  box.replaceChildren();
+  for (const r of rows) {
+    const bar = el("div", { class: "hbar", style: `width:calc((100% - 70px) * ${r.value / max})` });
+    const label = el("div", { class: "hlabel" }, r.label);
+    if (r.live) label.append(el("span", { class: "chip", text: "live" }));
+    label.append(el("span", { class: "meta", text: `as of ${r.as_of_text || fmtDate(r.as_of)}` }));
+    const row = el("div", { class: "hrow" }, label, el("div", { class: "htrack" }, bar, el("span", { class: "hval", text: fmtUSD(r.value) })));
+    bindTip(row, () => `<b>${esc(r.label)}: ${fmtUSD(r.value)}</b><br>${esc(r.note)}<br><span class="muted">Source: ${esc(r.source)}, ${esc(fmtDate(r.as_of))}</span>`);
+    box.append(row);
+  }
+  const t = $("storeTable");
+  t.replaceChildren(el("tr", {}, el("th", { text: "Place" }), el("th", { class: "num", text: "Value" }), el("th", { text: "As of" }), el("th", { text: "Source" })));
+  for (const r of rows) {
+    const src = el("td"); const a = el("a", { href: r.url, target: "_blank", rel: "noopener", text: r.source }); src.append(a);
+    t.append(el("tr", {}, el("td", { text: r.label + (r.live ? " (live)" : "") }), el("td", { class: "num", text: fmtUSD(r.value) }), el("td", { text: fmtDate(r.as_of) }), src));
+  }
+}
+
+/* ---------- section 2: price vs flow ---------- */
+function dailyFlows(hist) {
+  // hist rows: [date, nav, shares, tna] ascending.
+  // Fund companies report shares outstanding one day late: the change on row i+1 is day i's trading.
+  // So the newest row has no flow yet, and price effect = shares held x change in NAV.
+  const out = [];
+  for (let i = 1; i < hist.length - 1; i++) {
+    const [d, nav, sh] = hist[i], prevNav = hist[i - 1][1], nextSh = hist[i + 1][2];
+    out.push({ date: d, flow: (nextSh - sh) * nav, price: sh * (nav - prevNav), startVal: sh * prevNav });
+  }
+  return out;
+}
+function windowSplit(hist, n) {
+  const days = dailyFlows(hist).slice(-n);
+  if (days.length < n) return null;
+  const flow = days.reduce((a, x) => a + x.flow, 0), price = days.reduce((a, x) => a + x.price, 0);
+  return { flow, price, from: days[0].date, to: days[days.length - 1].date, start: days[0].startVal };
+}
+function renderFlows() {
+  const etfs = state.live.etfs || {}, n = state.win, box = $("flowRows");
+  const items = Object.entries(etfs).map(([tk, e]) => ({ tk, e, w: windowSplit(e.history, n) }));
+  const max = Math.max(1, ...items.filter((x) => x.w).flatMap((x) => [Math.abs(x.w.flow), Math.abs(x.w.price)]));
+  box.replaceChildren();
+  let totFlow = 0, totPrice = 0;
+  for (const { tk, e, w } of items) {
+    const label = el("div", { class: "hlabel" }, `${e.asset_class}`, el("span", { class: "meta", text: `${tk} · ${e.name}` }));
+    let mid, vals;
+    if (!w) {
+      mid = el("div", { class: "empty", text: `Not enough history yet: ${e.history.length} day(s) since ${fmtDate(e.history[0][0])}. This fund's history grows by one day per update.` });
+      vals = el("div");
+    } else {
+      totFlow += Math.abs(w.flow); totPrice += Math.abs(w.price);
+      mid = el("div", { class: "dtrack" }, el("div", { class: "dzero" }));
+      for (const [cls, v] of [["f", w.flow], ["p", w.price]]) {
+        const pct = (Math.abs(v) / max) * 50;
+        const b = el("div", { class: `dbar ${cls} ${v >= 0 ? "up" : "down"}`,
+          style: `width:${Math.max(pct, 0.3)}%;${v >= 0 ? "left:50%" : `left:${50 - pct}%`}` });
+        mid.append(b);
+      }
+      vals = el("div", { class: "dvals" });
+      vals.innerHTML = `Real flow <b>${fmtUSD(w.flow, true)}</b><br>Price effect <b>${fmtUSD(w.price, true)}</b>`;
+    }
+    const row = el("div", { class: "drow" }, label, mid, vals);
+    if (w) bindTip(row, () => `<b>${esc(tk)}, ${esc(fmtDate(w.from))} to ${esc(fmtDate(w.to))}</b><br>Fund value at start: ${fmtUSD(w.start)}<br>Real flow: ${fmtUSD(w.flow, true)} (${(w.flow / w.start * 100).toFixed(1)}%)<br>Price effect: ${fmtUSD(w.price, true)} (${(w.price / w.start * 100).toFixed(1)}%)`);
+    box.append(row);
+  }
+  const share = totPrice / (totPrice + totFlow || 1);
+  $("flowSummary").textContent = `Across these funds over ${n} trading day${n > 1 ? "s" : ""}, price explains about ${Math.round(share * 100)}% of the size of the value changes and real flow about ${Math.round((1 - share) * 100)}% (sizes compared fund by fund, ignoring direction).`;
+
+  const t = $("flowTable");
+  t.replaceChildren(el("tr", {}, el("th", { text: "Fund" }), el("th", { text: "Period" }), el("th", { class: "num", text: "Value at start" }), el("th", { class: "num", text: "Real flow" }), el("th", { class: "num", text: "Price effect" })));
+  for (const { tk, w } of items) t.append(el("tr", {}, el("td", { text: tk }),
+    el("td", { text: w ? `${fmtDate(w.from)} – ${fmtDate(w.to)}` : "not enough history" }),
+    el("td", { class: "num", text: w ? fmtUSD(w.start) : "" }), el("td", { class: "num", text: w ? fmtUSD(w.flow, true) : "" }), el("td", { class: "num", text: w ? fmtUSD(w.price, true) : "" })));
+}
+
+/* ---------- section 3: daily columns ---------- */
+function renderDaily() {
+  const e = state.live.etfs?.[state.etf], box = $("dailyChart");
+  box.replaceChildren();
+  const days = e ? dailyFlows(e.history).slice(-60) : [];
+  const t = $("dailyTable");
+  t.replaceChildren(el("tr", {}, el("th", { text: "Date" }), el("th", { class: "num", text: "Real flow" }), el("th", { class: "num", text: "Price effect" })));
+  if (!days.length) { box.append(el("p", { class: "empty", text: "Not enough history for this fund yet." })); return; }
+  const W = Math.max(280, box.clientWidth), H = 220, padL = 56, padR = 8, padT = 10, padB = 24;
+  const ext = Math.max(...days.map((d) => Math.abs(d.flow))) || 1;
+  const y = (v) => padT + (H - padT - padB) / 2 * (1 - v / ext);
+  const slot = (W - padL - padR) / days.length, bw = Math.min(24, Math.max(2, slot - 2));
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("role", "img"); svg.setAttribute("aria-label", `Daily real flow for ${state.etf}`);
+  const mk = (tag, a) => { const n = document.createElementNS(NS, tag); for (const k in a) n.setAttribute(k, a[k]); return n; };
+  for (const v of [ext, 0, -ext]) {
+    svg.append(mk("line", { x1: padL, x2: W - padR, y1: y(v), y2: y(v), stroke: v === 0 ? "var(--axis)" : "var(--grid)", "stroke-width": 1 }));
+    const tx = mk("text", { x: padL - 6, y: y(v) + 4, "text-anchor": "end" }); tx.textContent = v === 0 ? "$0" : fmtUSD(v, true); svg.append(tx);
+  }
+  days.forEach((d, i) => {
+    const x = padL + i * slot + (slot - bw) / 2, y0 = y(0), y1 = y(d.flow), h = Math.abs(y1 - y0);
+    const up = d.flow >= 0, r = Math.min(4, bw / 2, h);
+    // rounded data-end, square at the zero baseline
+    const top = up ? y1 : y0, bot = up ? y0 : y1;
+    const path = up
+      ? `M${x},${bot} V${top + r} Q${x},${top} ${x + r},${top} H${x + bw - r} Q${x + bw},${top} ${x + bw},${top + r} V${bot} Z`
+      : `M${x},${top} V${bot - r} Q${x},${bot} ${x + r},${bot} H${x + bw - r} Q${x + bw},${bot} ${x + bw},${bot - r} V${top} Z`;
+    if (h > 0.2) svg.append(mk("path", { d: path, fill: up ? "var(--pos)" : "var(--neg)" }));
+    const hit = mk("rect", { x: padL + i * slot, y: padT, width: slot, height: H - padT - padB, fill: "transparent" });
+    bindTip(hit, () => `<b>${esc(state.etf)}, ${esc(fmtDate(d.date))}</b><br>Real flow: ${fmtUSD(d.flow, true)}<br>Price effect: ${fmtUSD(d.price, true)}`);
+    svg.append(hit);
+  });
+  [0, days.length - 1].forEach((i) => {
+    const tx = mk("text", { x: padL + i * slot + slot / 2, y: H - 6, "text-anchor": i ? "end" : "start" });
+    tx.textContent = fmtDate(days[i].date); svg.append(tx);
+  });
+  box.append(svg);
+  for (const d of [...days].reverse()) t.append(el("tr", {}, el("td", { text: fmtDate(d.date) }), el("td", { class: "num", text: fmtUSD(d.flow, true) }), el("td", { class: "num", text: fmtUSD(d.price, true) })));
+}
+
+/* ---------- section 4: money ---------- */
+function renderMoney() {
+  const m = [...(state.live.money || [])].sort((a, b) => b.usd_tn - a.usd_tn), box = $("moneyBars");
+  box.replaceChildren();
+  if (!m.length) return;
+  const max = m[0].usd_tn;
+  for (const r of m) {
+    const label = el("div", { class: "hlabel" }, r.label, el("span", { class: "meta", text: `as of ${fmtDate(r.as_of)}` }));
+    const row = el("div", { class: "hrow" }, label, el("div", { class: "htrack" },
+      el("div", { class: "hbar", style: `width:calc((100% - 70px) * ${r.usd_tn / max})` }), el("span", { class: "hval", text: fmtUSD(r.usd_tn * 1e12) })));
+    bindTip(row, () => `<b>${esc(r.label)}: ${fmtUSD(r.usd_tn * 1e12)}</b><br><span class="muted">Source: ${esc(r.source)}</span>`);
+    box.append(row);
+  }
+  const t = $("moneyTable");
+  t.replaceChildren(el("tr", {}, el("th", { text: "Economy" }), el("th", { class: "num", text: "In US dollars" }), el("th", { text: "As of" }), el("th", { text: "Source" })));
+  for (const r of m) { const td = el("td"); td.append(el("a", { href: r.url, target: "_blank", rel: "noopener", text: r.source }));
+    t.append(el("tr", {}, el("td", { text: r.label }), el("td", { class: "num", text: fmtUSD(r.usd_tn * 1e12) }), el("td", { text: fmtDate(r.as_of) }), td)); }
+}
+
+/* ---------- controls ---------- */
+function buildControls() {
+  const wc = $("windowCtl");
+  for (const [n, lbl] of WINDOWS) {
+    const b = el("button", { class: "seg", "aria-pressed": String(n === state.win), text: lbl });
+    b.onclick = () => { state.win = n; wc.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); renderFlows(); };
+    wc.append(b);
+  }
+  const ec = $("etfCtl");
+  for (const [tk, e] of Object.entries(state.live.etfs || {})) {
+    const b = el("button", { class: "seg", "aria-pressed": String(tk === state.etf), text: `${tk} · ${e.asset_class}` });
+    b.onclick = () => { state.etf = tk; ec.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); renderDaily(); };
+    ec.append(b);
+  }
+}
+
+/* ---------- live refresh of crypto and gold, in the browser ---------- */
+async function refreshLive() {
+  try {
+    const [g, p] = await Promise.all([
+      fetch("https://api.coingecko.com/api/v3/global").then((r) => r.ok ? r.json() : Promise.reject(r.status)),
+      fetch("https://api.coingecko.com/api/v3/simple/price?ids=pax-gold&vs_currencies=usd").then((r) => r.ok ? r.json() : Promise.reject(r.status)),
+    ]);
+    const now = new Date().toISOString();
+    state.live.crypto = { total_mcap_usd: g.data.total_market_cap.usd, as_of: new Date(g.data.updated_at * 1000).toISOString(), source: "CoinGecko" };
+    const price = p["pax-gold"].usd;
+    state.live.gold = { price_usd_oz: price, value_usd: price * state.slow.gold_above_ground_tonnes.value * TROY_OZ_PER_TONNE, as_of: now };
+    renderStores();
+  } catch (e) {
+    // Keep the values from data/live.json; the "as of" dates show how old they are.
+  }
+}
+
+async function init() {
+  try {
+    const [slow, live] = await Promise.all(["data/slow.json", "data/live.json"].map((u) => fetch(u, { cache: "no-store" }).then((r) => r.json())));
+    Object.assign(state, { slow, live });
+  } catch (e) {
+    $("updated").textContent = "Could not load the data files. If you opened this file directly, run a local web server instead (see README).";
+    return;
+  }
+  const gen = new Date(state.live.generated_utc);
+  $("updated").textContent = `Daily data last fetched ${gen.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short" })}. Each row shows the date of its own figure.`;
+  if (state.live.errors?.length) $("errors").textContent = `Some sources failed on the last update, so older values are shown for: ${state.live.errors.join("; ")}`;
+  buildControls();
+  renderStores(); renderFlows(); renderDaily(); renderMoney();
+  refreshLive();
+  setInterval(refreshLive, 60000);
+  let rt; addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(renderDaily, 150); });
+}
+init();
+</script>
+</body>
+</html>

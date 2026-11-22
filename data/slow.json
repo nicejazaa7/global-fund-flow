@@ -1,0 +1,79 @@
+{
+  "_readme": "Hand-entered numbers. Update each one when its source publishes a new figure, change as_of, then push. Values in USD trillions unless 'unit' says otherwise.",
+  "stores": [
+    {
+      "id": "real_estate",
+      "label": "Real estate",
+      "value_tn": 393.3,
+      "as_of": "2024-12-31",
+      "source": "Savills",
+      "url": "https://www.savills.us/insight-and-opinion/savills-news/381209/world-s-real-estate-worth-393-3-trillion-and-is-the-world-s-largest-store-of-wealth",
+      "note": "Homes, commercial property and farmland. Partly financed by debt, so it overlaps the debt row."
+    },
+    {
+      "id": "debt",
+      "label": "Debt (all borrowing)",
+      "value_tn": 365,
+      "as_of": "2026-06-30",
+      "source": "IIF Global Debt Monitor",
+      "url": "https://stockanalysis.com/news/global-debt-hits-365-trillion/",
+      "note": "Government, company, household and bank debt, including loans. Traded bonds are a smaller part of it."
+    },
+    {
+      "id": "stocks_us",
+      "label": "US stocks (estimate)",
+      "value_tn": 64.1,
+      "as_of": "2026-08-31",
+      "source": "FTSE Global All Cap: $103.6T total (31 Dec 2025) x US weight 61.91% (31 Aug 2026)",
+      "url": "https://www.icaew.com/insights/viewpoints-on-the-news/2026/jan-2026/chart-of-the-week-global-stock-markets",
+      "note": "Mixed dates, so this is a rough estimate. Counts only freely traded shares."
+    },
+    {
+      "id": "stocks_rest",
+      "label": "Other stocks, developed + emerging (estimate)",
+      "value_tn": 39.5,
+      "as_of": "2026-08-31",
+      "source": "FTSE Global All Cap: $103.6T total minus the US estimate",
+      "url": "https://www.icaew.com/insights/viewpoints-on-the-news/2026/jan-2026/chart-of-the-week-global-stock-markets",
+      "note": "Mixed dates, so this is a rough estimate. Emerging markets are inside this number."
+    },
+    {
+      "id": "private",
+      "label": "Private assets in funds",
+      "value_tn": 14.9,
+      "as_of": "2025-12-31",
+      "source": "Ocorian",
+      "url": "https://www.ocorian.com/knowledge-hub/insights/global-value-private-assets-held-funds-rises-154-another-all-time-high-149",
+      "note": "Private equity, private credit, infrastructure and similar funds."
+    }
+  ],
+  "gold_above_ground_tonnes": {
+    "value": 224200,
+    "as_of": "2026-09-30",
+    "source": "World Gold Council",
+    "url": "https://www.gold.org/goldhub/data/above-ground-stocks",
+    "note": "All gold ever mined. Gold value = this amount x the live gold price."
+  },
+  "money_hand": [
+    {
+      "id": "CN",
+      "label": "China M2",
+      "value_local_tn": 359.06,
+      "currency": "CNY",
+      "as_of": "2026-10-31",
+      "source": "PBOC (reported by People's Daily)",
+      "url": "https://en.people.cn/n3/2026/1114/c90000-20519006.html",
+      "note": "Update monthly from the PBOC financial statistics report."
+    },
+    {
+      "id": "JP",
+      "label": "Japan M2",
+      "value_local_tn": 1295,
+      "currency": "JPY",
+      "as_of": "2026-04-30",
+      "source": "Bank of Japan (via YCharts)",
+      "url": "https://www.boj.or.jp/en/statistics/money/ms/",
+      "note": "Out of date. Update from the Bank of Japan Money Stock page."
+    }
+  ]
+}
