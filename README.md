@@ -39,5 +39,4 @@ After that, the data refreshes every day by itself.
 ## Known limits
 
 - IBIT's history starts on the first day the script runs, because iShares only shows the current day's figures. Its 20-day view fills in after about 20 trading days.
-- Japan M2 in `data/slow.json` is from April 2026 and needs a manual update.
 - ETFs are a small slice of each market, so their flows are a signal, not the whole picture.

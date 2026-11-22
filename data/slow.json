@@ -68,12 +68,12 @@
     {
       "id": "JP",
       "label": "Japan M2",
-      "value_local_tn": 1295,
+      "value_local_tn": 1291.4,
       "currency": "JPY",
-      "as_of": "2026-04-30",
-      "source": "Bank of Japan (via YCharts)",
-      "url": "https://www.boj.or.jp/en/statistics/money/ms/",
-      "note": "Out of date. Update from the Bank of Japan Money Stock page."
+      "as_of": "2026-10",
+      "source": "Bank of Japan, Money Stock (preliminary, monthly average)",
+      "url": "https://www.boj.or.jp/en/statistics/money/ms/ms2610.pdf",
+      "note": "Update monthly. The next release is in mid-December; its PDF follows the same link pattern (ms2611.pdf)."
     }
   ]
 }

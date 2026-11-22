@@ -1,15 +1,15 @@
 {
- "generated_utc": "2026-11-22T13:13:42+00:00",
+ "generated_utc": "2026-11-22T13:18:08+00:00",
  "errors": [],
  "crypto": {
-  "total_mcap_usd": 2069561159026.2722,
-  "as_of": "2026-11-22T13:05:28+00:00",
+  "total_mcap_usd": 2071828143536.5964,
+  "as_of": "2026-11-22T13:15:31+00:00",
   "source": "CoinGecko"
  },
  "gold": {
-  "price_usd_oz": 3548.17,
-  "value_usd": 25575909725186.473,
-  "as_of": "2026-11-22T13:13:42.715132+00:00",
+  "price_usd_oz": 3548.13,
+  "value_usd": 25575621397290.96,
+  "as_of": "2026-11-22T13:18:09.394670+00:00",
   "source": "PAX Gold token price on CoinGecko (tracks 1 oz of gold)"
  },
  "fx": {
@@ -47,10 +47,10 @@
   {
    "id": "JP",
    "label": "Japan M2",
-   "usd_tn": 8.162919414969888,
-   "as_of": "2026-04-30",
-   "source": "Bank of Japan (via YCharts), entered by hand",
-   "url": "https://www.boj.or.jp/en/statistics/money/ms/"
+   "usd_tn": 8.140227129337541,
+   "as_of": "2026-10",
+   "source": "Bank of Japan, Money Stock (preliminary, monthly average), entered by hand",
+   "url": "https://www.boj.or.jp/en/statistics/money/ms/ms2610.pdf"
   }
  ],
  "etfs": {
