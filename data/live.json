@@ -1,15 +1,15 @@
 {
- "generated_utc": "2026-11-22T12:55:46+00:00",
+ "generated_utc": "2026-11-22T13:13:42+00:00",
  "errors": [],
  "crypto": {
-  "total_mcap_usd": 2070309113638.6125,
-  "as_of": "2026-11-22T12:55:26+00:00",
+  "total_mcap_usd": 2069561159026.2722,
+  "as_of": "2026-11-22T13:05:28+00:00",
   "source": "CoinGecko"
  },
  "gold": {
-  "price_usd_oz": 3550.82,
-  "value_usd": 25595011448263.93,
-  "as_of": "2026-11-22T12:55:47.182975+00:00",
+  "price_usd_oz": 3548.17,
+  "value_usd": 25575909725186.473,
+  "as_of": "2026-11-22T13:13:42.715132+00:00",
   "source": "PAX Gold token price on CoinGecko (tracks 1 oz of gold)"
  },
  "fx": {
