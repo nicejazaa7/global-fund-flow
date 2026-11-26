@@ -1,22 +1,22 @@
 {
- "generated_utc": "2026-11-25T21:56:38+00:00",
+ "generated_utc": "2026-11-26T21:51:26+00:00",
  "errors": [],
  "crypto": {
-  "total_mcap_usd": 2089805238896.975,
-  "as_of": "2026-11-25T21:47:36+00:00",
+  "total_mcap_usd": 2108675555858.308,
+  "as_of": "2026-11-26T21:41:35+00:00",
   "source": "CoinGecko"
  },
  "gold": {
-  "price_usd_oz": 3577.54,
-  "value_usd": 25787614482463.81,
-  "as_of": "2026-11-25T21:56:38.844964+00:00",
+  "price_usd_oz": 3565.06,
+  "value_usd": 25697656179065.062,
+  "as_of": "2026-11-26T21:51:26.799553+00:00",
   "source": "PAX Gold token price on CoinGecko (tracks 1 oz of gold)"
  },
  "fx": {
-  "EURUSD": 1.0935,
-  "USDCNY": 6.6757201646090545,
-  "USDJPY": 159.32327389117515,
-  "as_of": "2026-11-25",
+  "EURUSD": 1.0975,
+  "USDCNY": 6.660227790432802,
+  "USDJPY": 159.2619589977221,
+  "as_of": "2026-11-26",
   "source": "ECB reference rates"
  },
  "money": [
@@ -31,15 +31,15 @@
   {
    "id": "EZ",
    "label": "Eurozone M2",
-   "usd_tn": 18.033921081,
-   "as_of": "2026-09",
+   "usd_tn": 18.1533666675,
+   "as_of": "2026-10",
    "source": "ECB data portal",
    "url": "https://data.ecb.europa.eu/"
   },
   {
    "id": "CN",
    "label": "China M2",
-   "usd_tn": 53.785957341881385,
+   "usd_tn": 53.91106900514392,
    "as_of": "2026-10-31",
    "source": "PBOC, Financial Statistics Report (October 2026), entered by hand",
    "url": "https://www.pbc.gov.cn/en/3688247/3688978/3709137/2026111713594664567/index.html"
@@ -47,7 +47,7 @@
   {
    "id": "JP",
    "label": "Japan M2",
-   "usd_tn": 8.105532659855355,
+   "usd_tn": 8.108653241032096,
    "as_of": "2026-10",
    "source": "Bank of Japan, Money Stock (preliminary, monthly average), entered by hand",
    "url": "https://www.boj.or.jp/en/statistics/money/ms/ms2610.pdf"
@@ -4761,12 +4761,6 @@
    "source": "State Street (SSGA) daily NAV history",
    "history": [
     [
-     "2025-11-19",
-     379.649066,
-     364700000.0,
-     138458014511.74
-    ],
-    [
      "2025-11-20",
      376.300327,
      363200000.0,
@@ -6319,6 +6313,12 @@
      331.982799,
      360400000.0,
      119646600609.25
+    ],
+    [
+     "2026-11-25",
+     317.577231,
+     360600000.0,
+     114518349545.0
     ]
    ]
   },
@@ -6344,6 +6344,12 @@
      33.71130420000602,
      1329760000.0,
      44827943873.0
+    ],
+    [
+     "2026-11-25",
+     33.92064348387389,
+     1324560000.0,
+     44929927533.0
     ]
    ]
   }
