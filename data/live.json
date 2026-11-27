@@ -1,22 +1,22 @@
 {
- "generated_utc": "2026-11-26T21:51:26+00:00",
+ "generated_utc": "2026-11-27T21:35:02+00:00",
  "errors": [],
  "crypto": {
-  "total_mcap_usd": 2108675555858.308,
-  "as_of": "2026-11-26T21:41:35+00:00",
+  "total_mcap_usd": 2079219885682.2537,
+  "as_of": "2026-11-27T21:35:01+00:00",
   "source": "CoinGecko"
  },
  "gold": {
-  "price_usd_oz": 3565.06,
-  "value_usd": 25697656179065.062,
-  "as_of": "2026-11-26T21:51:26.799553+00:00",
+  "price_usd_oz": 3643.36,
+  "value_usd": 26262058034523.54,
+  "as_of": "2026-11-27T21:35:02.154458+00:00",
   "source": "PAX Gold token price on CoinGecko (tracks 1 oz of gold)"
  },
  "fx": {
-  "EURUSD": 1.0975,
-  "USDCNY": 6.660227790432802,
-  "USDJPY": 159.2619589977221,
-  "as_of": "2026-11-26",
+  "EURUSD": 1.0957,
+  "USDCNY": 6.654376197864379,
+  "USDJPY": 159.54184539563752,
+  "as_of": "2026-11-27",
   "source": "ECB reference rates"
  },
  "money": [
@@ -31,7 +31,7 @@
   {
    "id": "EZ",
    "label": "Eurozone M2",
-   "usd_tn": 18.1533666675,
+   "usd_tn": 18.123593492099996,
    "as_of": "2026-10",
    "source": "ECB data portal",
    "url": "https://data.ecb.europa.eu/"
@@ -39,7 +39,7 @@
   {
    "id": "CN",
    "label": "China M2",
-   "usd_tn": 53.91106900514392,
+   "usd_tn": 53.95847624533684,
    "as_of": "2026-10-31",
    "source": "PBOC, Financial Statistics Report (October 2026), entered by hand",
    "url": "https://www.pbc.gov.cn/en/3688247/3688978/3709137/2026111713594664567/index.html"
@@ -47,7 +47,7 @@
   {
    "id": "JP",
    "label": "Japan M2",
-   "usd_tn": 8.108653241032096,
+   "usd_tn": 8.094428121960986,
    "as_of": "2026-10",
    "source": "Bank of Japan, Money Stock (preliminary, monthly average), entered by hand",
    "url": "https://www.boj.or.jp/en/statistics/money/ms/ms2610.pdf"
@@ -59,12 +59,6 @@
    "name": "SPDR S&P 500 ETF",
    "source": "State Street (SSGA) daily NAV history",
    "history": [
-    [
-     "2025-11-12",
-     683.129392,
-     1028732116.0,
-     702757145250.04
-    ],
     [
      "2025-11-13",
      671.850237,
@@ -1618,6 +1612,12 @@
      718.51354,
      1071282116.0,
      769730705630.88
+    ],
+    [
+     "2026-11-25",
+     716.705031,
+     1064582116.0,
+     762991358725.82
     ]
    ]
   },
@@ -1626,12 +1626,6 @@
    "name": "SPDR Portfolio Emerging Markets ETF",
    "source": "State Street (SSGA) daily NAV history",
    "history": [
-    [
-     "2025-11-12",
-     47.801539,
-     319800000.0,
-     15286932275.2
-    ],
     [
      "2025-11-13",
      47.875725,
@@ -3185,6 +3179,12 @@
      46.429548,
      334600000.0,
      15535326908.36
+    ],
+    [
+     "2026-11-25",
+     45.56587,
+     337100000.0,
+     15360254810.23
     ]
    ]
   },
@@ -3193,12 +3193,6 @@
    "name": "SPDR Portfolio Aggregate Bond ETF",
    "source": "State Street (SSGA) daily NAV history",
    "history": [
-    [
-     "2025-11-12",
-     25.893668,
-     352900264.0,
-     9137882255.72
-    ],
     [
      "2025-11-13",
      25.82104,
@@ -4752,6 +4746,12 @@
      24.781704,
      427200264.0,
      10586750474.47
+    ],
+    [
+     "2026-11-25",
+     24.864677,
+     425100264.0,
+     10569980586.28
     ]
    ]
   },
